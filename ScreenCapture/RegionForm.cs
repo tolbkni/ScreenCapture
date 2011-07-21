@@ -19,34 +19,140 @@ namespace ScreenCapture
 
         #endregion
 
+        #region 枚举
+
+        public enum RegionToolType
+        {
+            Pointer,
+            Rectangle,
+            NumberOfRegionTools
+        };
+
+        #endregion
+
+        #region 成员
+
+        private RegionObject regionObject;  // 绘制对象
+
+        private RegionToolType activeTool;  // 当前绘制工具
+        private Tool[] tools;               // 工具数组
+        private Image _image;               // 保存区域截图
+
+        #endregion
+
+        #region 属性
+
+        /// <summary>
+        /// 当前绘制工具
+        /// </summary>
+        public RegionToolType ActiveTool
+        {
+            get { return activeTool; }
+            set { activeTool = value; }
+        }
+
+        /// <summary>
+        /// 区域截图形状
+        /// </summary>
+        public RegionObject RegionObject
+        {
+            get { return regionObject; }
+            set { regionObject = value; }
+        }
+
+        /// <summary>
+        /// 保存区域截图
+        /// </summary>
+        public Image Image
+        {
+            get { return _image; }
+            set { _image = value; }
+        }
+
+        #endregion
+
+        #region 事件处理
+
+        /// <summary>
+        /// 绘制区域形状
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RegionForm_Paint(object sender, PaintEventArgs e)
         {
-
+            if (regionObject != null)
+            {
+                regionObject.Draw(e.Graphics);
+            }
         }
 
+        /// <summary>
+        /// 把释放鼠标左键事件传递给当前工具
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RegionForm_MouseUp(object sender, MouseEventArgs e)
         {
-
+            if (e.Button == MouseButtons.Left)
+            {
+                tools[(int)activeTool].OnMouseUp(this, e);
+            }
         }
 
+        /// <summary>
+        /// 把按住鼠标左键移动和不按键移动事件传递给当前工具
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RegionForm_MouseMove(object sender, MouseEventArgs e)
         {
-
+            if (e.Button == MouseButtons.Left || e.Button == MouseButtons.None)
+            {
+                tools[(int)activeTool].OnMouseMove(this, e);
+            }
+            else
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
+        /// <summary>
+        /// 按下鼠标左键事件传递给当前工具
+        /// 按下鼠标右键事件直接关闭本窗体
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RegionForm_MouseDown(object sender, MouseEventArgs e)
         {
-
+            if (e.Button == MouseButtons.Left)
+            {
+                tools[(int)activeTool].OnMouseDown(this, e);
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                this.Close();
+                this.Dispose();
+            }
         }
 
+        /// <summary>
+        /// 保存绘制对象区域对应的图片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RegionForm_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-
+            //////////////////////////////////////////////////////////////////////////
         }
 
+        #endregion
 
-        #region 初始化
 
+        #region 其他方法
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
         public void Initialize()
         {
             SetStyle(
@@ -54,6 +160,11 @@ namespace ScreenCapture
                 ControlStyles.UserPaint |
                 ControlStyles.OptimizedDoubleBuffer, 
                 true);
+
+            // 创建绘制工具
+            tools = new Tool[(int)RegionToolType.NumberOfRegionTools];
+            tools[(int)RegionToolType.Pointer] = new ToolPointer();
+            tools[(int)RegionToolType.Rectangle] = new ToolRectangle();
         }
 
         #endregion

@@ -80,6 +80,10 @@ namespace ScreenCapture
             // 显示区域截图窗体
             RegionForm frm = new RegionForm();
             frm.Initialize();
+
+            // 设置默认工具
+            frm.ActiveTool = RegionForm.RegionToolType.Rectangle;
+            frm.RegionObject = new RegionRectangle(); 
             frm.BackgroundImage = image;
             frm.Show();
         }
