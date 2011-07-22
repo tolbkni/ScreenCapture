@@ -35,5 +35,14 @@ namespace ScreenCapture
         public virtual void OnMouseUp(RegionForm regionForm, MouseEventArgs e)
         {
         }
+
+        /// <summary>
+        /// Ë«»÷Êó±ê×ó¼ü
+        /// </summary>
+        /// <param name="regionForm"></param>
+        /// <param name="e"></param>
+        public virtual void OnMouseDoubleClick(RegionForm regionForm, MouseEventArgs e)
+        {
+        }
     }
 }

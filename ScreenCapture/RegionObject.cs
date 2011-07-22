@@ -28,7 +28,7 @@ namespace ScreenCapture
         /// </summary>
         /// <param name="g"></param>
         /// <returns></returns>
-        public virtual RegionObject Draw(Graphics g)
+        public virtual void Draw(Graphics g)
         {
         }
 

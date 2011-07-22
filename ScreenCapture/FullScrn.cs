@@ -34,6 +34,13 @@ namespace ScreenCapture
             // 把屏幕快照保存在位图中
             g.CopyFromScreen(0, 0, 0, 0, size);
             g.Dispose();
+
+            // 暂存到剪贴板
+            /* 
+             * Clipboard.SetImage(FullScrn.Image);
+             */
+            // 保存图片
+            Image.Save(Application.StartupPath + "\\FullScrn.png");
         }
     }
 }

@@ -54,13 +54,6 @@ namespace ScreenCapture
         {
             // 获取屏幕快照
             FullScrn.Capture();
-
-            // 暂存到剪贴板
-            /* 
-             * Clipboard.SetImage(FullScrn.Image);
-             */
-            // 保存图片
-            FullScrn.Image.Save(Application.StartupPath + "\\FullScrn.png");
         }
 
         /// <summary>
@@ -79,6 +72,7 @@ namespace ScreenCapture
 
             // 显示区域截图窗体
             RegionForm frm = new RegionForm();
+            frm.Size = size;
             frm.Initialize();
 
             // 设置默认工具

@@ -36,7 +36,6 @@ namespace ScreenCapture
 
         private RegionToolType activeTool;  // 当前绘制工具
         private Tool[] tools;               // 工具数组
-        private Image _image;               // 保存区域截图
 
         #endregion
 
@@ -58,15 +57,6 @@ namespace ScreenCapture
         {
             get { return regionObject; }
             set { regionObject = value; }
-        }
-
-        /// <summary>
-        /// 保存区域截图
-        /// </summary>
-        public Image Image
-        {
-            get { return _image; }
-            set { _image = value; }
         }
 
         #endregion
@@ -142,7 +132,16 @@ namespace ScreenCapture
         /// <param name="e"></param>
         private void RegionForm_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            //////////////////////////////////////////////////////////////////////////
+            if (e.Button == MouseButtons.Left)
+            {
+                Rectangle rect = ((RegionRectangle)RegionObject).Rectangle;
+                if (rect.Contains(new Point(e.X, e.Y)))
+                {
+                    tools[(int)activeTool].OnMouseDoubleClick(this, e);
+                    this.Close();
+                    this.Dispose();
+                }
+            }
         }
 
         #endregion
