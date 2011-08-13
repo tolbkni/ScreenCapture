@@ -28,7 +28,7 @@ namespace ScreenCapture
         /// <param name="e"></param>
         public override void OnMouseUp(RegionForm regionForm, MouseEventArgs e)
         {
-            regionForm.RegionObject.Normalize();
+            regionForm.DrawRectangle.Normalize();
             // 切换成拖动模式
             regionForm.ActiveTool = RegionForm.RegionToolType.Pointer;
 
@@ -42,9 +42,9 @@ namespace ScreenCapture
         /// </summary>
         /// <param name="regionForm"></param>
         /// <param name="o"></param>
-        protected void ChangeObject(RegionForm regionForm, RegionObject o)
+        protected void ChangeObject(RegionForm regionForm, DrawRectangle o)
         {
-            regionForm.RegionObject = o;
+            regionForm.DrawRectangle = o;
 
             regionForm.Capture = true;
             regionForm.Refresh();

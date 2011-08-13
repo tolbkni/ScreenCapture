@@ -25,6 +25,7 @@ namespace ScreenCapture
         {
             Pointer,
             Rectangle,
+            Path,
             NumberOfRegionTools
         };
 
@@ -32,7 +33,7 @@ namespace ScreenCapture
 
         #region 成员
 
-        private RegionObject regionObject;  // 绘制对象
+        private DrawRectangle drawRectangle;  // 绘制对象
 
         private RegionToolType activeTool;  // 当前绘制工具
         private Tool[] tools;               // 工具数组
@@ -53,10 +54,10 @@ namespace ScreenCapture
         /// <summary>
         /// 区域截图形状
         /// </summary>
-        public RegionObject RegionObject
+        public DrawRectangle DrawRectangle
         {
-            get { return regionObject; }
-            set { regionObject = value; }
+            get { return drawRectangle; }
+            set { drawRectangle = value; }
         }
 
         #endregion
@@ -70,9 +71,9 @@ namespace ScreenCapture
         /// <param name="e"></param>
         private void RegionForm_Paint(object sender, PaintEventArgs e)
         {
-            if (regionObject != null)
+            if (drawRectangle != null)
             {
-                regionObject.Draw(e.Graphics);
+                drawRectangle.Draw(e.Graphics);
             }
         }
 
@@ -134,7 +135,7 @@ namespace ScreenCapture
         {
             if (e.Button == MouseButtons.Left)
             {
-                Rectangle rect = ((RegionRectangle)RegionObject).Rectangle;
+                Rectangle rect = ((DrawRectangle)DrawRectangle).Rectangle;
                 if (rect.Contains(new Point(e.X, e.Y)))
                 {
                     tools[(int)activeTool].OnMouseDoubleClick(this, e);
@@ -164,6 +165,7 @@ namespace ScreenCapture
             tools = new Tool[(int)RegionToolType.NumberOfRegionTools];
             tools[(int)RegionToolType.Pointer] = new ToolPointer();
             tools[(int)RegionToolType.Rectangle] = new ToolRectangle();
+            tools[(int)RegionToolType.Path] = new ToolPath();
         }
 
         #endregion

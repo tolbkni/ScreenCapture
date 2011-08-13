@@ -77,10 +77,11 @@
     <Compile Include="RegionForm.Designer.cs">
       <DependentUpon>RegionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="RegionObject.cs" />
-    <Compile Include="RegionRectangle.cs" />
+    <Compile Include="DrawPath.cs" />
+    <Compile Include="DrawRectangle.cs" />
     <Compile Include="Tool.cs" />
     <Compile Include="ToolObject.cs" />
+    <Compile Include="ToolPath.cs" />
     <Compile Include="ToolPointer.cs" />
     <Compile Include="ToolRectangle.cs" />
   </ItemGroup>

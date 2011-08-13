@@ -77,7 +77,7 @@ namespace ScreenCapture
 
             // 设置默认工具
             frm.ActiveTool = RegionForm.RegionToolType.Rectangle;
-            frm.RegionObject = new RegionRectangle(); 
+            frm.DrawRectangle = new DrawRectangle(); 
             frm.BackgroundImage = image;
             frm.Show();
         }
@@ -87,7 +87,25 @@ namespace ScreenCapture
         /// </summary>
         private void CommandPathScrn()
         {
+            // 获取屏幕大小
+            Size size = Screen.PrimaryScreen.Bounds.Size;
+            // 保存屏幕快照
+            Image image = new Bitmap(size.Width, size.Height);
+            Graphics g = Graphics.FromImage(image);
+            g.CopyFromScreen(0, 0, 0, 0, size);
 
+            g.Dispose();
+
+            // 显示区域截图窗体
+            RegionForm frm = new RegionForm();
+            frm.Size = size;
+            frm.Initialize();
+
+            // 设置默认工具
+            frm.ActiveTool = RegionForm.RegionToolType.Path;
+            frm.DrawRectangle = new DrawPath();
+            frm.BackgroundImage = image;
+            frm.Show();
         }
 
         /// <summary>

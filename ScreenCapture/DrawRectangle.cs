@@ -5,11 +5,13 @@ using System.Drawing;
 namespace ScreenCapture
 {
     /// <summary>
-    /// 矩形绘图对象
+    /// 矩形绘图对象，所有绘制对象的基类
     /// </summary>
-    class RegionRectangle : RegionObject
+    public class DrawRectangle
     {
         private Rectangle rectangle;
+
+        #region 属性
 
         public Rectangle Rectangle
         {
@@ -17,14 +19,16 @@ namespace ScreenCapture
             set { rectangle = value; }
         }
 
+        #endregion
+
         #region 构造方法
 
-        public RegionRectangle()
+        public DrawRectangle()
             : this(0, 0, 1, 1)
         {
         }
 
-        public RegionRectangle(int x, int y, int width, int height)
+        public DrawRectangle(int x, int y, int width, int height)
             : base()
         {
             rectangle.X = x;
@@ -39,14 +43,42 @@ namespace ScreenCapture
         /// 绘制矩形
         /// </summary>
         /// <param name="g"></param>
-        public override void Draw(Graphics g)
+        public virtual void Draw(Graphics g)
         {
             Pen pen = new Pen(Color.Black);
 
-            g.DrawRectangle(pen, RegionRectangle.GetNormalizedRectangle(Rectangle));
+            g.DrawRectangle(pen, DrawRectangle.GetNormalizedRectangle(Rectangle));
             DrawTracker(g);
 
             pen.Dispose();
+        }
+
+        /// <summary>
+        /// 通过拖柄编号得到对应拖柄区域
+        /// </summary>
+        /// <param name="handleNumber"></param>
+        /// <returns></returns>
+        public virtual Rectangle GetHandleRectangle(int handleNumber)
+        {
+            Point point = GetHandle(handleNumber);
+
+            return new Rectangle(point.X - 3, point.Y - 3, 7, 7);
+        }
+
+        /// <summary>
+        /// 绘制拖柄
+        /// </summary>
+        /// <param name="g"></param>
+        public virtual void DrawTracker(Graphics g)
+        {
+            SolidBrush brush = new SolidBrush(Color.Black);
+
+            for (int i = 1; i <= HandleCount; i++)
+            {
+                g.FillRectangle(brush, GetHandleRectangle(i));
+            }
+
+            brush.Dispose();
         }
 
         protected void SetRectangle(int x, int y, int width, int height)
@@ -60,7 +92,7 @@ namespace ScreenCapture
         /// <summary>
         /// 获取拖柄数量
         /// </summary>
-        public override int HandleCount
+        public virtual int HandleCount
         {
             get { return 8; }
         }
@@ -70,7 +102,7 @@ namespace ScreenCapture
         /// </summary>
         /// <param name="handleNumber"></param>
         /// <returns></returns>
-        public override Point GetHandle(int handleNumber)
+        public virtual Point GetHandle(int handleNumber)
         {
             int x, y, xCenter, yCenter;
 
@@ -127,7 +159,7 @@ namespace ScreenCapture
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public override int HitTest(Point point)
+        public virtual int HitTest(Point point)
         {
             for (int i = 1; i <= HandleCount; i++)
             {
@@ -143,7 +175,12 @@ namespace ScreenCapture
             return -1;
         }
 
-        protected override bool PointInObject(Point point)
+        /// <summary>
+        /// 判断点是否在对象内部
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        protected virtual bool PointInObject(Point point)
         {
             return rectangle.Contains(point);
         }
@@ -153,7 +190,7 @@ namespace ScreenCapture
         /// </summary>
         /// <param name="handleNumber"></param>
         /// <returns></returns>
-        public override Cursor GetHandleCursor(int handleNumber)
+        public virtual Cursor GetHandleCursor(int handleNumber)
         {
             switch (handleNumber)
             {
@@ -183,7 +220,7 @@ namespace ScreenCapture
         /// </summary>
         /// <param name="point"></param>
         /// <param name="handleNumber"></param>
-        public override void MoveHandleTo(Point point, int handleNumber)
+        public virtual void MoveHandleTo(Point point, int handleNumber)
         {
             int left = Rectangle.Left;
             int top = Rectangle.Top;
@@ -230,18 +267,18 @@ namespace ScreenCapture
         /// </summary>
         /// <param name="deltaX"></param>
         /// <param name="deltaY"></param>
-        public override void Move(int deltaX, int deltaY)
+        public virtual void Move(int deltaX, int deltaY)
         {
             rectangle.X += deltaX;
             rectangle.Y += deltaY;
         }
 
         /// <summary>
-        /// 规格化矩形
+        /// 规格化矩形，在对象改变大小的之后调用
         /// </summary>
-        public override void Normalize()
+        public virtual void Normalize()
         {
-            rectangle = RegionRectangle.GetNormalizedRectangle(rectangle);
+            rectangle = DrawRectangle.GetNormalizedRectangle(rectangle);
         }
 
         #region 辅助方法

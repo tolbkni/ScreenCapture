@@ -16,7 +16,7 @@ namespace ScreenCapture
 
         public override void OnMouseDown(RegionForm regionForm, MouseEventArgs e)
         {
-            ChangeObject(regionForm, new RegionRectangle(e.X, e.Y, 1, 1));
+            ChangeObject(regionForm, new DrawRectangle(e.X, e.Y, 1, 1));
         }
 
         public override void OnMouseMove(RegionForm regionForm, MouseEventArgs e)
@@ -26,7 +26,7 @@ namespace ScreenCapture
             if ( e.Button == MouseButtons.Left )
             {
                 Point point = new Point(e.X, e.Y);
-                regionForm.RegionObject.MoveHandleTo(point, 5);
+                regionForm.DrawRectangle.MoveHandleTo(point, 5);
                 regionForm.Refresh();
             }
         }

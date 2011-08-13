@@ -35,7 +35,7 @@ namespace ScreenCapture
         private SelectionMode selectMode = SelectionMode.None;
 
         // 当前要拖动的对象
-        private RegionObject resizedObject;
+        private DrawRectangle resizedObject;
         private int resizedObjectHandle;
 
         // 保留上一个和当前点的状态（用来移动和拖动对象）
@@ -56,24 +56,24 @@ namespace ScreenCapture
             selectMode = SelectionMode.None;
             Point point = new Point(e.X, e.Y);
 
-            int handleNumber = regionForm.RegionObject.HitTest(point);
+            int handleNumber = regionForm.DrawRectangle.HitTest(point);
 
             if (handleNumber > 0)
             {
                 selectMode = SelectionMode.Size;
 
 
-                resizedObject = regionForm.RegionObject;
+                resizedObject = regionForm.DrawRectangle;
                 resizedObjectHandle = handleNumber;
             }
 
             if (selectMode == SelectionMode.None)
             {
-                RegionObject o = null;
+                DrawRectangle o = null;
 
-                if (regionForm.RegionObject.HitTest(point) == 0)
+                if (regionForm.DrawRectangle.HitTest(point) == 0)
                 {
-                    o = regionForm.RegionObject;
+                    o = regionForm.DrawRectangle;
                 }
 
                 if (o != null)
@@ -111,11 +111,11 @@ namespace ScreenCapture
             {
                 Cursor cursor = null;
 
-                int n = regionForm.RegionObject.HitTest(point);
+                int n = regionForm.DrawRectangle.HitTest(point);
 
                 if (n > 0)
                 {
-                    cursor = regionForm.RegionObject.GetHandleCursor(n);
+                    cursor = regionForm.DrawRectangle.GetHandleCursor(n);
                 }
 
                 if (cursor == null)
@@ -156,7 +156,7 @@ namespace ScreenCapture
             // 移动
             if (selectMode == SelectionMode.Move)
             {
-                regionForm.RegionObject.Move(dx, dy);
+                regionForm.DrawRectangle.Move(dx, dy);
 
                 regionForm.Cursor = Cursors.SizeAll;
                 regionForm.Refresh();
@@ -189,7 +189,7 @@ namespace ScreenCapture
         public override void OnMouseDoubleClick(RegionForm regionForm, MouseEventArgs e)
         {
             // 获取矩形区域
-            Rectangle rect = ((RegionRectangle)regionForm.RegionObject).Rectangle;
+            Rectangle rect = ((DrawRectangle)regionForm.DrawRectangle).Rectangle;
             // 新建位图保存区域快照
             Image = new Bitmap(rect.Width, rect.Height);
             Graphics g = Graphics.FromImage(_image);
